@@ -41,9 +41,27 @@ const UserSchema = new Schema({
 		minLength: [5, "Minimum length required is 5"],
 		maxLength: [100, "Maximum length required for location is 100"],
 	},
+	
 	hash: String,
 	salt: String,
+	
+	resetPasswordToken:String,
+	resetPasswordExpiry:Date,
 }, SchemaOptions)
+
+	
+// generating reset token
+UserSchema.methods.genResetToken = function(){
+	const resetToken = crypto.randomBytes(10).toString("hex")
+
+	this.resetPasswordToken = crypto
+		.createHash("sha256")
+		.update(resetToken)
+		.digest("hex")
+	
+	this.resetPasswordExpiry = Date.now() + 240 * (60 * 1000)
+	return resetToken
+}
 
 //model
 const User = mongoose.model("User", UserSchema);

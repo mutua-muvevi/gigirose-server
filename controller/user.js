@@ -1,41 +1,61 @@
-//package imports
-
-//module imports
 const User = require("../model/user");
-const cloudinary = require("../config/cloudinary");
+
+const sendEmail = require("../utils/sendMail");
 const ErrorResponse = require("../utils/errorResponse");
+const logger  = require("../utils/logger");
 
-//custom post error strings
-const userExistsError = "User already exists";
-const emailRequired = "Your email is required";
+const { generatePassword } = require("../middleware/password");
+const { issueJWT } = require("../middleware/token");
 
-//post controller
-exports.post = async (req, res, next) => {
-	let { email, fullname, phone, role } = req.body
+//register controller
+exports.register = async (req, res, next) => {
+	let { email, fullname, telephone, location, password } = req.body
 
-	try { console.log(req.body)
+	try { 
 		if(!email){
-			return next(new ErrorResponse(emailRequired, 400))
+			return next(new ErrorResponse("Your email is required", 400))
 		}
 
+		if(!fullname){
+			return next(new ErrorResponse("Your fullname is required", 400))
+		}
+
+		if(!location){
+			return next(new ErrorResponse("Your location is required", 400))
+		}
+
+		if(!password){
+			return next(new ErrorResponse("Your password is required", 400))
+		}
+		
+
+		//checking if this user exists
 		const userExist = await User.findOne({ email })
 
 		if(userExist){
-			return next(new ErrorResponse(userExistsError, 400))
+			return next(new ErrorResponse("This user exist", 400))
 		}
 
-		const result = await cloudinary.uploader.upload(
-			req.file.path,
-			{ folder: "starter" }
-		)
+		//generate password
+		const saltHash = generatePassword(password)
 
-		picture = result.url
+		const salt = saltHash.salt
+		const hash = saltHash.hash
+		
+		const user = new User({email, fullname, telephone, location, salt, hash})
 
-		const user = await User.create({email, fullname, phone, role})
+		if(!user){
+			return next(new ErrorResponse("Something went wrong when creating the user", 400))
+		}
+
+		await user.save()
+
+		const token = issueJWT(user)
 
 		res.status(201).json({
 			success: true,
-			user: user
+			user,
+			token
 		})
 
 	} catch (error) {
@@ -49,12 +69,12 @@ const noUserError = "No user"
 //edit by id controller
 exports.editById = (req, res, next) => {
 	const id = req.params.id
-	const { email, fullname, phone, role } = req.body
+	const { email, fullname, telephone, location } = req.body
 
 	try {
 		User.findByIdAndUpdate(
 			id,
-			{ email, fullname, phone, role },
+			{ email, fullname, telephone, location },
 			{ new: true },
 			(error, user) => {
 				if(!user){

@@ -3,12 +3,11 @@ const express = require("express");
 const router = express.Router();
 
 //custom module imports
-const { post, editById, fetchAll, fetchOne, deleteUser } = require("../controller/user");
-const { upload } = require("../utils/multer");
+const { register, editById, fetchAll, fetchOne, deleteUser } = require("../controller/user");
 
 //routes
 // create
-router.route("/post").post(upload.single("picture"), post);
+router.route("/register").post(register);
 
 //update
 router.route("/edit/:id").put(editById);

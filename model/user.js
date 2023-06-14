@@ -10,10 +10,6 @@ const SchemaOptions =  {
 	autoIndex: false,
 	collection: "User",
 	optimisticConcurrency: true,
-	collation: {
-		locale: "en_UK",
-		strength: 1
-	},
 	timeseries: {
 		timeField: 'timestamp',
 		metaField: 'metadata',
@@ -25,26 +21,28 @@ const SchemaOptions =  {
 const UserSchema = new Schema({
 	fullname: {
 		type: String,
-		minLength: [10, "Minimum length required is 10"],
+		minLength: [5, "Minimum length required is 5"],
 		maxLength: [100, "Maximum length required for fullname is 100"],
 		required: [true, "Fullname is required"]
 	},
 	email: {
 		type: String,
-		minLength: [10, "Minimum length required is 10"],
+		minLength: [5, "Minimum length required for email is 5"],
 		maxLength: [100, "Maximum length required for email is 100"],
 		required: [true, "Email is required"]
 	},
-	phone: {
+	telephone: {
 		type: String,
-		minLength: [10, "Minimum length required is 10"],
-		maxLength: [100, "Maximum length required for email is 100"],
+		minLength: [10, "Minimum length required for telephone is 10"],
+		maxLength: [100, "Maximum length required for telephone is 100"],
 	},
-	role: {
+	location: {
 		type: String,
-		minLength: [10, "Minimum length required is 10"],
-		maxLength: [100, "Maximum length required for role is 100"],
+		minLength: [5, "Minimum length required is 5"],
+		maxLength: [100, "Maximum length required for location is 100"],
 	},
+	hash: String,
+	salt: String,
 }, SchemaOptions)
 
 //model

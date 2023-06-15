@@ -208,6 +208,24 @@ exports.resetpassword = async (req, res, next) => {
 }
 
 
+exports.fetchMe = async (req, res, next) => {
+	try {
+		const { user } = req;
+
+		const objectsInUser = Object.values(user._doc).length
+
+		res.status(200).json({
+			success: true,
+			entries: objectsInUser,
+			data: user
+		})
+	} catch (error) {
+		logger.error(error)
+		next(error)
+	}
+}
+
+
 //custom edit error strings
 const noUserError = "No user"
 

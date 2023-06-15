@@ -22,6 +22,7 @@ app.use(cors())
 //custom middleware
 app.use("/api/user", require("./routes/user"));
 app.use("/api/book", require("./routes/booking"));
+app.use("/api/contact", require("./routes/contact"));
 
 //error middleware
 app.use(errorHandler)

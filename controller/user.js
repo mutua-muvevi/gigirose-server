@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 const User = require("../model/user");
 
 const sendEmail = require("../utils/sendMail");

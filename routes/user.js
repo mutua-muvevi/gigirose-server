@@ -3,12 +3,14 @@ const express = require("express");
 const router = express.Router();
 
 //custom module imports
-const { register, editById, fetchAll, fetchOne, deleteUser, login } = require("../controller/user");
+const { register, editById, fetchAll, fetchOne, deleteUser, login, forgotPassword, resetpassword } = require("../controller/user");
 
 //routes
 // create
 router.route("/register").post(register);
 router.route("/login").post(login);
+router.route("/forgotpassword").post(forgotPassword);
+router.route("/resetpassword").post(resetpassword);
 
 //update
 router.route("/edit/:id").put(editById);

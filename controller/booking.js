@@ -34,6 +34,8 @@ exports.post = async (req, res, next) => {
 			return next(new ErrorResponse("Something went wrong while booking the service", 400))
 		}
 
+		logger.info(`${fullname} booked for ${service} successfully`)
+
 		res.status(201).json({
 			success: true,
 			book,

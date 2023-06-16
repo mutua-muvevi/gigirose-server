@@ -30,6 +30,8 @@ exports.post = async (req, res, next) => {
 			return next(new ErrorResponse("Something went wrong while parsing contact message", 400))
 		}
 
+		logger.info(`${fullname} contact you with subject: ${subject}`)
+
 		res.status(201).json({
 			success: true,
 			contact,

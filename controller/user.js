@@ -13,7 +13,7 @@ const { issueJWT } = require("../middleware/token");
 exports.register = async (req, res, next) => {
 	let { email, fullname, telephone, location, password } = req.body
 
-	try { 
+	try {
 		if(!email){
 			return next(new ErrorResponse("Your email is required", 400))
 		}
@@ -54,6 +54,8 @@ exports.register = async (req, res, next) => {
 
 		const token = issueJWT(user)
 
+		logger.info("User was registered sucessfully")
+
 		res.status(201).json({
 			success: true,
 			user,
@@ -69,7 +71,7 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
 	const { email, password } = req.body
 
-	try {console.log(req.body)
+	try {
 		if(!email){
 			return next(new ErrorResponse("Your email is required", 400))
 		}
@@ -81,7 +83,7 @@ exports.login = async (req, res, next) => {
 		const existingUser = await User.findOne({email})
 
 		if(!existingUser){
-			return next(new ErrorResponse(invalidAuthMessage, 400))
+			return next(new ErrorResponse("Invalid login credentials", 400))
 		}
 
 		const user = await User.findOne({email})
@@ -89,10 +91,12 @@ exports.login = async (req, res, next) => {
 		const isValid = validatePassword(password, user.salt, user.hash)
 
 		if(!isValid){
-			return next(new ErrorResponse(invalidAuthMessage, 400))
+			return next(new ErrorResponse("Invalid login credentials", 400))
 		}
 
 		const tokenObject = issueJWT(user)
+
+		logger.info("User logged in successfully")
 
 		res.status(200).json({
 			success: true,

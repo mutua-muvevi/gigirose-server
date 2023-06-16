@@ -4,8 +4,9 @@ const router = express.Router();
 
 //custom module imports
 const { register, editById, fetchAll, fetchOne, deleteUser, login, forgotPassword, resetpassword, fetchMe } = require("../controller/user");
-const { authMiddleware } = require("../middleware/auth");
+
 const { getMe } = require("../middleware/me");
+const { authMiddleware } = require("../middleware/auth");
 
 //routes
 // create
